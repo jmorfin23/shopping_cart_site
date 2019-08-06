@@ -1,0 +1,55 @@
+.card {
+  height: 410px;
+  width: 220px;
+  padding: 10px;
+  margin-top: 100px;
+  display: inline-block;
+  margin-left: 6px;
+  margin-right: 6px;
+}
+img {
+  height: 220px;
+  width: 100%;
+  margin: 5px auto;
+}
+.card-title {
+  font-weight: bold;
+  font-size: 130%;
+  padding: 3px;
+}
+.card-text {
+  padding: 3px;
+}
+.btn {
+  margin-top: 10px;
+  background-color: green;
+  cursor: pointer;
+}
+.btn:hover {
+  color: white!important;
+}
+.item-price {
+  padding: 3px;
+}
+.extra-margin-top {
+  margin-top: 100px;
+}
+.head {
+  text-align: center;
+}
+.body {
+  text-align: center;
+}
+.remove {
+  height: 50%;
+  width: 100%;
+  background-color: red;
+  color: white;
+  text-align: center;
+  display: block;
+  border-radius: 5px;
+  cursor: pointer;
+}
+.remove:hover {
+  color: white!important;  
+}
