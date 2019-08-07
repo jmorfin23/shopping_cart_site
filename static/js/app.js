@@ -2,57 +2,67 @@
 // function to get navbar from header:
 function getNav(response) {
   $('header').html(response);
+  return;
 };
 $.get('./components/header.html', getNav);
 
-
 //building cards
 let item = ``
-
 function getData(response) {
   for (let i in response) {
-      item += `<div class="card"><img src="${response[i]['img_url']}" alt="placeholder"><div class="card-title">${response[i]['name']}</div><div class="item-price">$${response[i]['price']}</div><div class="card-text">${response[i]['description']}</div><a class="btn btn-primary add" id="${response[i]['id']}" onclick="makeCart(${response[i]['id']})">Add to Cart</a></div>`
+      item += `<div class="card"><img src="${response[i]['img_url']}" alt="placeholder"><div class="card-title">${response[i]['name']}</div><div class="item-price">$${response[i]['price']}</div><div class="card-text">${response[i]['description']}</div><a class="btn btn-primary add" id="${response[i]['id']}" onclick="makeCart(${response[i]['id']}, '${response[i]['name']}')">Add to Cart</a></div>`
   }
   $('.insert-cards').html(item);
+  return;
 };
 //grabs data from json file - then runs function
 $.get('./products.json', getData);
 
+//function for add to cart button
 
-let b = ``
-//functinn for add to cart button
-function makeCart(id) {
-  // checkCart(id);
+//variable for making the cart = b
+let b = ``;
+
+//list to track id's
+let alist = [];
+//number of product in cart
+let number = 1;
+
+function makeCart(id, name) {
+  let trueorfalse = checkId(id)
+  if (trueorfalse == true){
+    addNumber();
+    changeNumber(name);
+    return;
+  }
+  addToList(id)
+  //calling products from json file / printing the cart
   $.get('./products.json', function(response) {
-    for (let i in response) {
-      if (id == response[i]['id']) {
-        b += `<tr class="${response[i]['id']}"><td>1</td><td>${response[i]['name']}</td><td>${response[i]['price']}</td><td><a class="remove" onclick="removeFromCart(${response[i]['id']}, ${response[i]['price']})">X</a></td></tr>`;
-        $('.body').html(b);
-        $('.body2').html(b);
-        getTotal(response[i]['price'])
+    b = ``
+    for (let j in alist) {
+      for (let i in response) {
+        if (alist[j] == response[i]['id']) {
+          b += `<tr class="${response[i]['id']}"><td id="${response[i]['name']}">${number}</td><td>${response[i]['name']}</td><td>${response[i]['price']}</td><td><a class="remove" onclick="removeFromCart(${response[i]['id']}, ${response[i]['price']})">X</a></td></tr>`;
+          $('.body').html(b);
+          $('.body2').html(b);
+          getTotal(response[i]['price']);
+        }
       }
     }
   });
+  return;
 }
 
-//checking if cart has same item
-// function checkCart(id) {
-//   var check = /102/;
-//   var result = b.match(check);
-//   console.log(result);
-// }
+let str = ``
+
 function removeFromCart(id, price) {
-
   let removeMe = $(`.${id}`)[0].outerHTML;
-
   //removes from table
-  $(`.${id}`).remove();
-
-
+  removeFromTable(id);
+  removeFromB(removeMe);
   // remove from b
-  let str = b.replace(removeMe, '');
-  b = str
-  subTotal(price)
+  subTotal(price);
+  return;
 }
 
 //displaying total dollars in cart
@@ -62,18 +72,69 @@ let t = 0;
 function getTotal(num) {
       t += num;
       displayTotal(t);
+    return;
 }
 
 function displayTotal(num) {
   num = num.toFixed(2);
-  $('#total').text(num);
-  $('#total2').text(`Total: ${num}`)
+  $('#total').text(`Total: $${num}`);
+  $('#total2').text(`Total: $${num}`)
+  return;
 }
 
 function subTotal(num) {
   t -= num;
-  displayTotal(t)
+  displayTotal(t);
+  return;
 }
+
+function removeFromTable(id) {
+  $(`.${id}`).remove();
+  removeFromList(id)
+  return;
+}
+
+function removeFromList(id) {
+  for (let i in alist) {
+    if (id == alist[i]) {
+      alist.splice(i, 1)
+    }
+  }
+  return;
+}
+
+function removeFromB(removeMe) {
+  str = b.replace(removeMe, '');
+  b = str;
+  return;
+}
+
+function checkId(id) {
+  for (let i in alist) {
+    if (id == alist[i]) {
+      console.log('id is in the list');
+      return true
+    }
+  }
+  return false;
+}
+
+function addToList(id) {
+  //adding id to list
+  alist.push(id);
+  return;
+}
+// function addNumber() {
+//   number += 1;
+//   return;
+// }
+// function changeNumber(name) {
+//   $(`#${name}`).text(number);
+// }
+// $('.add').click(function(e) {
+//   let v = $(this).attr('id');
+//   console.log(v);
+// });
 
 //=======================================================
 
